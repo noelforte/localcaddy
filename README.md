@@ -11,13 +11,13 @@ These files make a few assumptions upfront, customize to your needs:
 
 1. Clone or download this repository.
 2. Configure the LaunchAgent and script to your needs.
-   1. In `caddyctl`:
+   1. In `bin/caddyctl`:
       1. On line 3, set `CONFIG_PATH` to the path of your `Caddyfile`.
    2. In `com.caddy.server.plist`:
       1. On line 13 and 16, set your preferred paths for logs.
       2. On line 26, set the path to your Caddyfile (same as `CONFIG_PATH`).
-3. Verify `caddyctl` is user-executable and move to `/usr/local/bin` or anywhere else in your `$PATH`.
-4. Move `com.caddy.server.plist` to `~/Library/LaunchAgents`.
+3. Verify `bin/caddyctl` is user-executable and move to `/usr/local/bin` or anywhere else in your `$PATH`.
+4. Move `LaunchAgents/com.caddy.server.plist` to `~/Library/LaunchAgents`.
 
 **Running**
 

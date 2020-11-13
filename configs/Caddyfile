@@ -1,0 +1,13 @@
+{
+  local_certs
+  admin off
+}
+
+localhost {
+  root * <ROOT_PATH>
+  file_server browse
+  handle_errors {
+    file_server
+    rewrite * "/{http.error.status_code}.html"
+  }
+}

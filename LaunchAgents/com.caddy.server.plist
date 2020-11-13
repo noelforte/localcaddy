@@ -23,7 +23,7 @@
 
     <key>WorkingDirectory</key>
     <!-- customize to your needs -->
-    <string>/path/to/config/file</string>
+    <string>CONFIG_PATH</string>
 
     <key>ProgramArguments</key>
     <array>

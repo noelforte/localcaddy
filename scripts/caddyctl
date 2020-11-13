@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# caddyctl (caddy control) - A bash script for managing caddy in conjunction with LaunchD LaunchAgent files
+# Copyright (c) 2020 Noel Forté
+
+# user config
+CONFIG_PATH="CONFIG_PATH_SETTING"
+CADDY_PATH="/usr/local/bin/cady"
+
+# util vars
+RESET="\033[0m"
+BOLD="\033[1m"
+RED="\033[31m"
+GREEN="\033[32m"
+YELLOW="\033[33m"
+BLUE="\033[34m"
+
+case $1 in
+	start)
+		echo -e "${BOLD}${YELLOW}Loading Caddy launch agent...${RESET}"
+		launchctl load "$(eval echo "~")/Library/LaunchAgents/com.caddy.plist"
+		echo -e "${BOLD}${GREEN}Caddy loaded and started.${RESET}"
+		exit 0;
+		;;
+	
+	stop)
+		echo -e "${BOLD}${YELLOW}Unloading Caddy Launch Agent...${RESET}"
+		launchctl unload "$(eval echo "~")/Library/LaunchAgents/com.caddy.plist"
+		echo -e "${BOLD}${RED}Caddy unloaded and halted.${RESET}"
+		exit 0;
+		;;
+
+	reload)
+		echo -e "${BOLD}${YELLOW}Reloading Caddy...${RESET}"
+		/usr/local/bin/caddy reload --config "${CONFIG_PATH}"
+		echo -e "${BOLD}${BLUE}Caddy reloaded.${RESET}"
+		exit 0;
+		;;
+
+	restart)
+		echo -e "${BOLD}${YELLOW}Restarting Caddy...${RESET}"
+		echo -e "${BOLD}${YELLOW}Stopping Caddy...${RESET}"
+		launchctl unload "$(eval echo "~")/Library/LaunchAgents/com.caddy.plist"
+		echo -e "${BOLD}${RED}Caddy stopped.${RESET}"
+		echo -e "${BOLD}${YELLOW}Starting Caddy...${RESET}"
+		sleep 2
+		launchctl load "$(eval echo "~")/Library/LaunchAgents/com.caddy.plist"
+		echo -e "${BOLD}${GREEN}Caddy started.${RESET}"
+		exit 0;
+		;;
+
+	*)
+		echo "Unknown command. Use \"start\" \"stop\" \"reload\" or \"restart\"."
+		exit 1;
+		;;
+esac

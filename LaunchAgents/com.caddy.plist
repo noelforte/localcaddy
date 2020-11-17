@@ -4,26 +4,13 @@
   <dict>
 
     <key>Label</key>
-    <string>com.caddy.server</string>
+    <string>com.caddy</string>
 
     <key>RunAtLoad</key>
     <true/>
 
-    <key>StandardErrorPath</key>
-    <string>/usr/local/var/logs/error.log</string>
-
-    <key>StandardOutPath</key>
-    <string>/usr/local/var/logs/server.log</string>
-
-    <key>EnvironmentVariables</key>
-    <dict>
-      <key>PATH</key>
-      <string><![CDATA[/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin]]></string>
-    </dict>
-
     <key>WorkingDirectory</key>
-    <!-- customize to your needs -->
-    <string>CONFIG_PATH</string>
+    <string><WORKING_DIR_PATH></string>
 
     <key>ProgramArguments</key>
     <array>

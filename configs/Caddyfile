@@ -1,6 +1,5 @@
 {
   local_certs
-  admin off
 }
 
 localhost {

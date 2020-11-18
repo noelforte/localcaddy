@@ -64,7 +64,8 @@ if [[ $do_service_files == "y" || $do_service_files == "yes" ]] ; then
   sed "s|<ROOT_PATH>|${DEV_PATH}|g" ./execs/caddyctl > /usr/local/bin/caddyctl
   chmod +x /usr/local/bin/caddyctl
 
-  echo -e "\n${BOLD}${BLUE}==> Added caddyctl as an executable to /usr/local/bin/caddyctl. You can modify this script at any time by editing this file.${RESET}\n"
+  echo -e "\n${BOLD}${BLUE}==> Added caddyctl as an executable to /usr/local/bin/caddyctl. You can modify this script at any time by editing this file."
+  echo -e "==> Get help by running 'caddyctl'.${RESET}"
 fi
 
 echo -e "${GREEN}==> Provision complete.${RESET}\n\n"

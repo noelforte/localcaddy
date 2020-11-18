@@ -50,12 +50,6 @@ case $ARGV in
 		exit 0
 		;;
 
-	configtest)
-		echo -e "${YELLOW}Testing Caddyfile...${RESET}"
-		$CADDY validate --config $2
-		exit 0
-		;;
-
 	restart)
 		reset_logs
 		echo -e "${BOLD}${YELLOW}Restarting Caddy...${RESET}"
@@ -68,8 +62,19 @@ case $ARGV in
 		exit 0
 		;;
 
+	configtest)
+		echo -e "${YELLOW}Testing Caddyfile...${RESET}"
+		$CADDY validate --config $2
+		exit 0
+		;;
+
 	*)
-		echo "${YELLOW}Unknown command. Use \"start\" \"stop\" \"reload\" or \"restart\".${RESET}"
+		echo -e "${YELLOW}\nUsage is 'caddyctl <command>', where <command> is:\n${RESET}"
+		echo -e "start          Starts caddy persistantly by loading a .plist into launchd via launchctl"
+		echo -e "stop           Stops caddy by unloading previously loaded .plist from launchd via launchctl"
+		echo -e "reload         Reloads caddy by executing 'caddy reload' to reload the configuration in place"
+		echo -e "restart        Effectively 'stop' and 'start' consecutively in 1 step"
+		echo -e "configtest     Tests the configuration at ${DEV_PATH}"
 		exit 1
 		;;
 esac

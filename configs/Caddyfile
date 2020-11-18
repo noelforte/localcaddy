@@ -3,10 +3,14 @@
 }
 
 localhost {
-  root * <ROOT_PATH>
+  root * <ROOT_PATH>/public
   file_server browse
   handle_errors {
     file_server
     rewrite * "/{http.error.status_code}.html"
+  }
+  log {
+    output file <ROOT_PATH>/log/caddy.log
+    format console
   }
 }

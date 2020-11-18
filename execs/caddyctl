@@ -4,7 +4,6 @@
 # Adapted from apachectl from the Apache Software Foundation
 # Copyright (c) 2020 Noel Forté
 
-
 # util vars
 RESET="\033[0m"
 BOLD="\033[1m"
@@ -16,57 +15,61 @@ ARGV="$@"
 
 # main definitions
 LAUNCHCTL="/bin/launchctl"
-CADDY="/usr/local/bin/caddy"
-LAUNCHD_JOB="/Library/LaunchAgents/com.caddy.plist"
-CONFIG_PATH="<CADDYFILE_PATH>"
+CADDY="/usr/local/sbin/caddy"
+LAUNCHD_JOB="/Users/noel/Library/LaunchAgents/com.caddyserver.plist"
+DEV_PATH="<ROOT_PATH>"
 
-run_launchctl() {
-    if [ $UID != 0 ]; then
-        echo This operation requires root.
-        exit 1
-    fi
-
-    $LAUNCHCTL $@
+reset_logs() {
+	# put the logs back if they went missing
+	if [[ ! -e ${DEV_PATH}/log ]] ; then mkdir ${DEV_PATH}/log ; fi
+	if [[ ! -e ${DEV_PATH}/log/caddy.log ]] ; then touch ${DEV_PATH}/log/caddy.log ; fi
 }
 
+# logic
 case $ARGV in
 	start)
+		reset_logs
 		echo -e "${YELLOW}Starting Caddy...${RESET}"
-		run_launchctl load -w $LAUNCHD_JOB
+		$LAUNCHCTL load -w $LAUNCHD_JOB
 		echo -e "${BOLD}${GREEN}Caddy loaded and started.${RESET}"
-		exit 0;
+		exit 0
 		;;
 	
 	stop)
 		echo -e "${YELLOW}Stopping Caddy...${RESET}"
-		run_launchctl unload -w $LAUNCHD_JOB
+		$LAUNCHCTL unload -w $LAUNCHD_JOB
 		echo -e "${BOLD}${RED}Caddy unloaded and halted.${RESET}"
-		exit 0;
+		exit 0
 		;;
 
 	reload)
+		reset_logs
 		echo -e "${YELLOW}Reloading Caddy...${RESET}"
-		$CADDY reload --config "${CONFIG_PATH}"
+		$CADDY reload --config "${CONFIG_PATH}/config/Caddyfile"
 		echo -e "${BOLD}${BLUE}Caddy reloaded.${RESET}"
-		exit 0;
+		exit 0
 		;;
 
 	configtest)
 		echo -e "${YELLOW}Testing Caddyfile...${RESET}"
+		$CADDY validate --config $2
+		exit 0
+		;;
 
 	restart)
+		reset_logs
 		echo -e "${BOLD}${YELLOW}Restarting Caddy...${RESET}"
 		echo -e "${YELLOW}Stopping Caddy...${RESET}"
-		run_launchctl unload -w $LAUNCHD_JOB
+		$LAUNCHCTL unload -w $LAUNCHD_JOB
 		echo -e "${BOLD}${RED}Caddy unloaded and halted.${RESET}"
 		echo -e "${YELLOW}Starting Caddy...${RESET}"
-		run_launchctl load -w $LAUNCHD_JOB
+		$LAUNCHCTL load -w $LAUNCHD_JOB
 		echo -e "${BOLD}${GREEN}Caddy loaded and started.${RESET}"
-		exit 0;
+		exit 0
 		;;
 
 	*)
 		echo "${YELLOW}Unknown command. Use \"start\" \"stop\" \"reload\" or \"restart\".${RESET}"
-		exit 1;
+		exit 1
 		;;
 esac

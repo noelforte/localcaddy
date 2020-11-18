@@ -34,34 +34,37 @@ fi
 if [[ ! -e ${DEV_PATH}/public ]] ; then 
   mkdir ${DEV_PATH}/public
 fi
+if [[ ! -e ${DEV_PATH}/log ]] ; then 
+  mkdir ${DEV_PATH}/log
+fi
 
-echo "Making copy of Caddyfile with changes..."
-sed "s|<ROOT_PATH>|${DEV_PATH}/public|g" ./configs/Caddyfile > ./configs/Caddyfile.modified
-echo "Moving Caddyfile to ${DEV_PATH}..."
-mv ./configs/Caddyfile.modified ${DEV_PATH}/config/Caddyfile
-echo "Caddyfile has been copied to ${DEV_PATH}/config/"
-
-echo -e "\n${GREEN}==> Local environment set up in ${DEV_PATH}.${RESET}\n"
+if [[ ! -e ${DEV_PATH}/config/Caddyfile ]] ; then
+  echo "Making copy of Caddyfile with changes..."
+  sed "s|<ROOT_PATH>|${DEV_PATH}|g" ./configs/Caddyfile > ${DEV_PATH}/config/Caddyfile
+  echo "Caddyfile has been copied to ${DEV_PATH}/config/Caddyfile"
+  echo -e "\n${GREEN}==> Local environment set up in ${DEV_PATH}.${RESET}\n"
+else
+  echo -e "\n${RED}==> A Caddyfile is already present at ${DEV_PATH}/config/Caddyfile.\n==> To use the one provided by this script, delete the currently existing one and re-run this script.${RESET}\n"
+fi
 
 read -p "Install LaunchAgent and caddyctl script? (requires root, you may be prompted for a password) (y/n): " do_service_files
 
 if [[ $do_service_files == "y" || $do_service_files == "yes" ]] ; then
   echo "Making copy of .plist file with changes..."
-  sed "s|<WORKING_DIR_PATH>|${DEV_PATH}/config|g" ./LaunchAgents/com.caddy.plist > ./LaunchAgents/com.caddy.plist.modified
-  echo "Taking root ownership of .plist and moving into place..."
-  sudo chown root:wheel ./LaunchAgents/com.caddy.plist.modified
-  sudo mv -f ./LaunchAgents/com.caddy.plist.modified /Library/LaunchAgents/com.caddy.plist
+  sed "s|<WORKING_DIR_PATH>|${DEV_PATH}/config|g" ./LaunchAgents/com.caddyserver.plist > ~/Library/LaunchAgents/com.caddyserver.plist
   
-  echo -e "\n${BOLD}${BLUE}==> Created /Library/LaunchAgents/com.caddy.plist. You will need to edit this file in the future to modify the folder path, as this is where Caddy will be launched from.${RESET}\n"
+  echo -e "\n${BOLD}${BLUE}==> Created ~/Library/LaunchAgents/com.caddy.plist. You will need to edit this file in the future to modify the folder path, as this is where Caddy will be launched from.${RESET}\n"
+  
+  echo "Taking root ownership of caddy and moving to /usr/local/sbin..."
+  sudo mv $(which caddy) /usr/local/sbin/caddy
+  sudo chown root:wheel /usr/local/sbin/caddy
+  sudo chmod +s /usr/local/sbin/caddy
 
   echo "Making copy of caddyctl with changes..."
-  sed "s|<CADDYFILE_PATH>|${DEV_PATH}/config/Caddyfile|g" ./execs/caddyctl > ./execs/caddyctl.modified
-  echo "Taking root ownership, setting executable permissions, and moving caddyctl into place..."
-  chmod +x ./execs/caddyctl.modified
-  sudo chown root:wheel ./execs/caddyctl.modified
-  sudo mv -f ./execs/caddyctl.modified /usr/local/sbin/caddyctl 
+  sed "s|<ROOT_PATH>|${DEV_PATH}|g" ./execs/caddyctl > /usr/local/bin/caddyctl
+  chmod +x /usr/local/bin/caddyctl
 
-  echo -e "\n${BOLD}${BLUE}==> Added caddyctl as an executable to /usr/local/sbin/caddyctl. You can modify this script at any time by editing this file.${RESET}\n"
+  echo -e "\n${BOLD}${BLUE}==> Added caddyctl as an executable to /usr/local/bin/caddyctl. You can modify this script at any time by editing this file.${RESET}\n"
 fi
 
 echo -e "${GREEN}==> Provision complete.${RESET}\n\n"

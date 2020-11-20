@@ -40,7 +40,7 @@ fi
 
 if [[ ! -e ${DEV_PATH}/config/Caddyfile ]] ; then
   echo "Making copy of Caddyfile with changes..."
-  sed "s|<ROOT_PATH>|${DEV_PATH}|g" ./configs/Caddyfile > ${DEV_PATH}/config/Caddyfile
+  sed "s|<ROOT_PATH>|${DEV_PATH}|g" ./dist/Caddyfile > ${DEV_PATH}/config/Caddyfile
   echo "Caddyfile has been copied to ${DEV_PATH}/config/Caddyfile"
   echo -e "\n${GREEN}==> Local environment set up in ${DEV_PATH}.${RESET}\n"
 else
@@ -51,7 +51,7 @@ read -p "Install LaunchAgent and caddyctl script? (requires root, you may be pro
 
 if [[ $do_service_files == "y" || $do_service_files == "yes" ]] ; then
   echo "Making copy of .plist file with changes..."
-  sed "s|<WORKING_DIR_PATH>|${DEV_PATH}/config|g" ./LaunchAgents/com.caddyserver.plist > ~/Library/LaunchAgents/com.caddyserver.plist
+  sed "s|<ROOT_PATH>|${DEV_PATH}/config|g" ./dist/com.caddyserver.plist > ~/Library/LaunchAgents/com.caddyserver.plist
   
   echo -e "\n${BOLD}${BLUE}==> Created ~/Library/LaunchAgents/com.caddy.plist.\n==> You will need to edit this file in the future to modify the\n==> directory path, as this is where Caddy will be launched from.${RESET}\n"
   
@@ -61,7 +61,7 @@ if [[ $do_service_files == "y" || $do_service_files == "yes" ]] ; then
   sudo chmod +s /usr/local/sbin/caddy
 
   echo "Making copy of caddyctl with changes..."
-  sed "s|<ROOT_PATH>|${DEV_PATH}|g" ./execs/caddyctl > /usr/local/bin/caddyctl
+  sed "s|<ROOT_PATH>|${DEV_PATH}|g" ./dist/caddyctl > /usr/local/bin/caddyctl
   chmod +x /usr/local/bin/caddyctl
 
   echo -e "\n${BOLD}${BLUE}==> Added caddyctl as an executable to /usr/local/bin/caddyctl.\n==> You can modify this script at any time by editing this file."

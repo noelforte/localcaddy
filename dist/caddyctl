@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 # A bash script for managing caddy in conjunction with launchd
 # Adapted from apachectl from the Apache Software Foundation
 # Copyright (c) 2020 Noel Forté
@@ -14,10 +16,10 @@ BLUE="\033[34m"
 ARGV="$@"
 
 # main definitions
-LAUNCHCTL="/bin/launchctl"
-CADDY="/usr/local/sbin/caddy"
-LAUNCHD_JOB="/Users/noel/Library/LaunchAgents/com.caddyserver.plist"
-DEV_PATH="<ROOT_PATH>"
+LAUNCHCTL=/bin/launchctl
+CADDY=/usr/local/sbin/caddy
+LAUNCHD_JOB=~/Library/LaunchAgents/com.caddyserver.plist
+DEV_PATH=<ROOT_PATH>
 
 reset_logs() {
 	# put the logs back if they went missing

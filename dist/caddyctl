@@ -47,7 +47,7 @@ case $ARGV in
 	reload)
 		reset_logs
 		echo -e "${YELLOW}Reloading Caddy...${RESET}"
-		$CADDY reload --config "${CONFIG_PATH}/config/Caddyfile"
+		$CADDY reload --config "${DEV_PATH}/config/Caddyfile"
 		echo -e "${BOLD}${BLUE}Caddy reloaded.${RESET}"
 		exit 0
 		;;
